@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import com.google.gson.*;
 
 class GpsClient {
   private BufferedReader in;
@@ -16,12 +17,14 @@ class GpsClient {
   }
 
   private void stream() {
+    Gson gson = new Gson();
     out.println("?WATCH={\"enable\":true,\"json\":true}");
     System.out.println("Watch Request Sent");
     try {
-      String response;
-      while ((response = in.readLine()) != null) {
-        System.out.println(response);
+      String jsonResponse;
+      while ((jsonResponse = in.readLine()) != null) {
+        GpsResponse response = gson.fromJson(jsonResponse, GpsResponse.class);
+        System.out.println(response.TPVString());
       }
     }
     catch (IOException e) {
@@ -34,10 +37,3 @@ class GpsClient {
     gps.stream();
   }
 }
-
-    //File gps = new File("/dev/ttyACM0");
-    //BufferedReader reader = new BufferedReader( new FileReader(gps));
-    //String text = "";
-    //while ((text = reader.readLine()) != null) {
-      //System.out.println(text);
-    //}
