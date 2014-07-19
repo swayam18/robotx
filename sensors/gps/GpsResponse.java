@@ -32,8 +32,7 @@ public class GpsResponse {
   public String utcTime() {
     Date date = null;
     try {
-      date = ISO8601.parse(time);
-      System.out.println(UTCFormat.format(date));
+      date = ISO8601.parse(time); // Rely on sys time instead of gps time if laggy
     }
     catch(Exception e) {
       e.printStackTrace();
@@ -46,12 +45,15 @@ public class GpsResponse {
     String latlong = "";
     double latitude = Double.parseDouble(lat);
     double longitude = Double.parseDouble(lon);
+
     latlong += Math.abs(latitude) + ",";
     if(latitude < 0) latlong += "S,";
     else latlong +="N,";
     latlong += Math.abs(longitude) + ",";
-    if(longitude < 0) latlong += Math.abs(latitude)+",E";
-    else latlong +=",W";
+    System.out.println(latlong);
+    if(longitude < 0) latlong += "W";
+    else latlong +="E";
+    System.out.println(latlong);
     return latlong;
   }
 
