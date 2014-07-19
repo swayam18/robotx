@@ -24,15 +24,14 @@ public class HeartBeat implements Runnable {
 
   public String checksum(String s) {
     int sum = 0;
-    for(int i = 1; i < s.length(); i++) {
-      sum^= s.indexOf(i);
-    }
+    for(int i = 1; i < s.length(); i++) { sum^= (int) s.charAt(i); }
     return Integer.toHexString(sum);
   }
 
   @Override
   public void run() {
     GpsResponse location = gps.getLastLocation();
+    if(location == null) return;
     System.out.println("Beating...");
     String NMEA = location.toNMEA() +",";
     NMEA += teamName +",";

@@ -7,7 +7,8 @@ import sys
 
 
 def calcchecksum(nmea_str):
-	return reduce(operator.xor, map(ord, nmea_str), 0)
+  print map(ord,nmea_str)
+  return reduce(operator.xor, map(ord, nmea_str), 0)
 	
 	#reads in a NMEA string, check integrity and returns dictionary of elements in message
 	#returns a dictionary with keys: talker, sentence type, and a list of the data elements

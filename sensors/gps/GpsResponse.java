@@ -50,10 +50,8 @@ public class GpsResponse {
     if(latitude < 0) latlong += "S,";
     else latlong +="N,";
     latlong += Math.abs(longitude) + ",";
-    System.out.println(latlong);
     if(longitude < 0) latlong += "W";
     else latlong +="E";
-    System.out.println(latlong);
     return latlong;
   }
 
@@ -62,7 +60,7 @@ public class GpsResponse {
     String NMEA = "";
     NMEA+= "$RXHRT,";  //Protocol Header
     NMEA+= utcTime() +",";
-    NMEA+= latlong() +",";
+    NMEA+= latlong();
     return NMEA;
   }
 }
