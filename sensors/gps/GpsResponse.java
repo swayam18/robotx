@@ -12,6 +12,9 @@ class GpsResponse {
   double climb;
   double track; //course over ground, degrees from true north
 
+  public boolean isTPV() {
+    return time != null && lat!= null && lon != null;
+  }
   public String TPVString() {
     return "Time:"+time+" Latitude: " + lat + "Longitude: "+lon;
   }

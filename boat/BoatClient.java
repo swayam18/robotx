@@ -35,4 +35,4 @@ class HeartBeat {
   public String toNMEA() {
     return "$RXSEA,161229,AUVSI,37.267458,N,12.376548,W,1.3*15";
   }
-}
+}   

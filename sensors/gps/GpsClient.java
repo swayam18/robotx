@@ -5,6 +5,7 @@ import com.google.gson.*;
 class GpsClient {
   private BufferedReader in;
   private PrintWriter out;
+  private GpsResponse lastResponse;
 
   public void open() throws Exception {
     String server = "localhost";
@@ -24,7 +25,10 @@ class GpsClient {
       String jsonResponse;
       while ((jsonResponse = in.readLine()) != null) {
         GpsResponse response = gson.fromJson(jsonResponse, GpsResponse.class);
-        System.out.println(response.TPVString());
+        if(response.isTPV()) {
+          System.out.println(response.TPVString());
+          lastResponse = response;
+        }
       }
     }
     catch (IOException e) {
