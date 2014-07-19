@@ -1,8 +1,10 @@
+package robotx.sensors.gps;
+
 import java.io.*;
 import java.net.*;
 import com.google.gson.*;
 
-class GpsClient {
+public class GpsClient extends Thread {
   private BufferedReader in;
   private PrintWriter out;
   private GpsResponse lastResponse;
@@ -17,6 +19,9 @@ class GpsClient {
     System.out.println(in.readLine());
   }
 
+  public void run() {
+    stream();
+  }
   private void stream() {
     Gson gson = new Gson();
     out.println("?WATCH={\"enable\":true,\"json\":true}");
@@ -33,6 +38,10 @@ class GpsClient {
     }
     catch (IOException e) {
     }
+  }
+
+  public GpsResponse getLastLocation() {
+    return lastResponse;
   }
 
   public static void main(String args[])throws Exception {
