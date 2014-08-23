@@ -24,8 +24,8 @@ public class GpsClient extends Thread {
   }
   private void stream() {
     Gson gson = new Gson();
-    out.println("?WATCH={\"enable\":true,\"json\":true}");
-    System.out.println("Watch Request Sent");
+    out.println("?WATCH={\"enable\":true,\"json\":true, \"device\": \"/dev/ttyACM0\"}");
+    System.out.println("Watch Request for GPS Sent");
     try {
       String jsonResponse;
       while ((jsonResponse = in.readLine()) != null) {
