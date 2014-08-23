@@ -1,13 +1,15 @@
-robotx
+Robotx
 ======
 
+Robotx autonomous marine navigation system
+
 Installation and Running
-===
+---------------------
 First, clone the repository and cd into it.
 Then cd to src and run ./build.sh
 
-* Sensors Setup
-===
+### Sensors Setup
+
 Run the following in terminal:
 
 sudo gpsd -N /dev/ttyACM0 /dev/ttyUSB0
