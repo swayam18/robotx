@@ -1,9 +1,11 @@
-package robotx.sensors.compass
+package robotx.sensors.compass;
+
+import java.io.*;
+import java.net.*;
 
 public class CompassClient extends Thread {
   private BufferedReader in;
   private PrintWriter out;
-  private CompassResponse lastResponse;
 
   public void open() throws Exception {
     String server = "localhost";
@@ -20,13 +22,15 @@ public class CompassClient extends Thread {
   }
 
   private void stream() {
-    Gson gson = new Gson();
     out.println("?WATCH={\"enable\":true,\"nmea\":true, \"device\": \"/dev/ttyUSB0\"}");
     System.out.println("Watch Request for COMPASS Sent");
     try {
       String nmeaResponse;
       while ((nmeaResponse = in.readLine()) != null) {
-        System.out.println(nmeaResponse);
+        if(CompassResponse.isValid(nmeaResponse)) {
+          CompassResponse response = new CompassResponse(nmeaResponse);
+          System.out.println(response.heading);
+        }
       }
     }
     catch (IOException e) {
