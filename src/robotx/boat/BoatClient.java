@@ -38,8 +38,17 @@ public class BoatClient {
     }
   }
 
+  public void initializeSerial() {
+    link = new SerialLink();
+    link.initialize();
+  }
+
   public void initializeController() {
     Controller control = new Controller(gps,compass,link);
+
+    // TODO: Change this guy!
+    control.setDestination(0,0);
+
     ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     exec.scheduleWithFixedDelay(control, 100, 100, TimeUnit.MILLISECONDS);
 
@@ -60,6 +69,9 @@ public class BoatClient {
 
     outputStream = new PrintWriter(judgeSocket.getOutputStream(), true);
     initializeGps();
+    initializeCompass();
+    initializeSerial();
+    initializeController();
     initializeHeart();
   }
 
