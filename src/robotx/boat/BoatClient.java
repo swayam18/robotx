@@ -14,7 +14,19 @@ import robotx.sensors.gps.*;
 public class BoatClient {
   PrintWriter outputStream;
   GpsClient gps;
+  CompassClient compass;
+  SerialLink link;
 
+  public void initializeCompass() {
+    compass = new CompassClient();
+    try {
+      compass.open();
+      compass.start();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
   public void initializeGps() {
     gps = new GpsClient();
     try {
@@ -26,6 +38,12 @@ public class BoatClient {
     }
   }
 
+  public void initializeController() {
+    Controller control = new Controller(gps,compass,link);
+    ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+    exec.scheduleWithFixedDelay(control, 100, 100, TimeUnit.MILLISECONDS);
+
+  }
   public void initializeHeart() {
     System.out.println("Starting Heart...");
     HeartBeat heartbeat = new HeartBeat(gps, outputStream);

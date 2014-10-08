@@ -6,7 +6,7 @@ import robotx.sensors.gps.*;
  * This will send control signals to the propellers.
 **/
 
-public class Controller {
+public class Controller implements Runnable {
   double destination_latitude;
   double destination_longitude;
 
@@ -18,11 +18,11 @@ public class Controller {
 
   // K values used for the controller
   private double k_theta = 0.1;
-  private double k_theta_d = 0.1;
+  private double k_theta_d = 0.0;
   private double k_s = 0.1;
-  private double k_s_d = 0.1;
+  private double k_s_d = 0.0;
 
-  public Controller(GpsClient gps, CompassClient compass) {
+  public Controller(GpsClient gps, CompassClient compass, SerialLink link) {
   }
 
   public void setDestination(double longitude, double latitude) {
@@ -30,7 +30,8 @@ public class Controller {
     destination_longitude = longitude;
   }
 
-  public void start(){
+  @Override
+  public void run(){
     control();
   }
 
@@ -85,7 +86,7 @@ public class Controller {
     double d_theta_error = current_theta_error - previous_theta_error;
 
     // calculate first the forward speed.
-    u1 = k_s*current_s_error + k_s_d*d_s_error;
+    u1 = k_s*current_s_error + k_s_d*d_s_error; // maybe divide in dt (which seems to be 0.1)
     // threshold the forward value
     u1 = u1 > 0.5 ? 0.5 : u1;
     u2 = u1; // equivalent.
@@ -100,6 +101,10 @@ public class Controller {
 
     u1 = u1 - differential;
     u2 = u2 + differential;
+
+    // send this over serial link
+
+    link.sendData(u1+","+u2);
 
     // Finally, set current error as last.
     previous_s_error = current_s_error;
