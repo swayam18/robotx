@@ -8,6 +8,11 @@ Installation and Running
 First, clone the repository and cd into it.
 Then cd to src and run ./build.sh
 
+### Libraries
+
+You need RXTX library installed for arduino communication. Use this:
+http://www.jcontrol.org/download/readme_rxtx_en.html
+
 ### Sensors Setup
 
 Run the following in terminal:
