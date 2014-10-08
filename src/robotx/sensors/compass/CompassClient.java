@@ -6,6 +6,7 @@ import java.net.*;
 public class CompassClient extends Thread {
   private BufferedReader in;
   private PrintWriter out;
+  private CompassResponse lastResponse;
 
   public void open() throws Exception {
     String server = "localhost";
@@ -29,12 +30,17 @@ public class CompassClient extends Thread {
       while ((nmeaResponse = in.readLine()) != null) {
         if(CompassResponse.isValid(nmeaResponse)) {
           CompassResponse response = new CompassResponse(nmeaResponse);
+          lastResponse = response;
           System.out.println(response.heading);
         }
       }
     }
     catch (IOException e) {
     }
+  }
+
+  public CompassResponse getLastBearing() {
+    return lastResponse;
   }
 
   public static void main(String args[])throws Exception {

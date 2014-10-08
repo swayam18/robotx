@@ -40,6 +40,14 @@ public class GpsResponse {
     return UTCFormat.format(date);
   }
 
+  public double latitude() {
+    return Double.parseDouble(lat);
+  }
+
+  public double longitude() {
+    return Double.parseDouble(lon);
+  }
+
   // Format [Lat],[N/S],[LON],[E/W]
   private String latlong() {
     String latlong = "";
