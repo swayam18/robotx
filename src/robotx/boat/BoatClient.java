@@ -45,7 +45,8 @@ public class BoatClient {
   }
 
   public void initializeController() {
-    Controller control = new Controller(gps,compass,link);
+    //Controller control = new Controller(gps,compass,link);
+    Controller control = new Controller(null,null,null);
 
     // TODO: Change this guy!
     control.setDestination(0,0);
@@ -82,6 +83,6 @@ public class BoatClient {
   public static void main(String args[])throws Exception {
     BoatClient client = new BoatClient();
     System.out.println("Starting Client");
-    client.initialize();
+    client.initializeController();
   }
 }

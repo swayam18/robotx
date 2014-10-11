@@ -151,10 +151,13 @@ public class Controller implements Runnable {
 
     //first, get current location and bearing
 
-    GpsResponse location = gps.getLastLocation();
-    this.current_latitude = location.getLatitude();
-    this.current_longitude = location.getLongitude();
-    this.current_bearing = compass.getLastBearing().getHeading();
+    //GpsResponse location = gps.getLastLocation();
+    //this.current_latitude = location.getLatitude();
+    //this.current_longitude = location.getLongitude();
+    //this.current_bearing = compass.getLastBearing().getHeading();
+    this.current_latitude = 0.00001;
+    this.current_longitude = 0.0001;
+    this.current_bearing = 0;
     
     // get current error
     double current_s_error = getDistanceError();
@@ -183,10 +186,17 @@ public class Controller implements Runnable {
 
     // send this over serial link
 
+    System.out.println("Distance Error:" + current_s_error);
+    System.out.println("Angle Error:" + current_theta_error);
     System.out.println(u1+","+u2);
 
     // Finally, set current error as last.
     previous_s_error = current_s_error;
     previous_theta_error = current_theta_error;
+  }
+
+  public static void main(String args[]) {
+    Controller controller = new Controller(null, null, null);
+    controller.control();
   }
 }
