@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import robotx.sensors.gps.*;
+import robotx.sensors.compass.*;
 
 /**
 * Sends NNMEA messaged to Judge
@@ -49,8 +50,11 @@ public class BoatClient {
     // TODO: Change this guy!
     control.setDestination(0,0);
 
-    ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-    exec.scheduleWithFixedDelay(control, 100, 100, TimeUnit.MILLISECONDS);
+    control.control();
+    control.control();
+    control.control();
+    //ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+    //exec.scheduleWithFixedDelay(control, 100, 100, TimeUnit.MILLISECONDS);
 
   }
   public void initializeHeart() {

@@ -40,11 +40,11 @@ public class GpsResponse {
     return UTCFormat.format(date);
   }
 
-  public double latitude() {
+  public double getLatitude() {
     return Double.parseDouble(lat);
   }
 
-  public double longitude() {
+  public double getLongitude() {
     return Double.parseDouble(lon);
   }
 

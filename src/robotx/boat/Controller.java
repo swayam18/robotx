@@ -1,17 +1,24 @@
 package robotx.boat;
 
 import robotx.sensors.gps.*;
+import robotx.sensors.compass.*;
 /**
  * Given destination latitude and longitude,
  * This will send control signals to the propellers.
 **/
 
 public class Controller implements Runnable {
+
+  GpsClient gps;
+  CompassClient compass;
+  SerialLink link;
+
   double destination_latitude;
   double destination_longitude;
 
   double current_latitude;
   double current_longitude;
+  double current_bearing;
 
   private double previous_s_error;
   private double previous_theta_error;
@@ -23,6 +30,9 @@ public class Controller implements Runnable {
   private double k_s_d = 0.0;
 
   public Controller(GpsClient gps, CompassClient compass, SerialLink link) {
+    this.gps = gps;
+    this.compass = compass;
+    this.link = link;
   }
 
   public void setDestination(double longitude, double latitude) {
@@ -38,20 +48,20 @@ public class Controller implements Runnable {
   public double getBearingError() {
     //reference https://gist.github.com/jeromer/200558
 
-    public double [] pointA = {0,0};
-    public double [] pointB = {0,0};
+    double [] pointA = {0,0};
+    double [] pointB = {0,0};
 		pointA[0] = Math.toRadians(current_latitude);
 		pointA[1] = Math.toRadians(current_longitude);
 		pointB[0] = Math.toRadians(destination_latitude);
 		pointB[1] = Math.toRadians(destination_longitude);
 		double lat1 = pointA[0];
 		double lat2 = pointB[0];
-		double diffLong = pointB[1]-pointA[1]
+		double diffLong = pointB[1]-pointA[1];
 	
-		double x = Math.sin(diffLong)*Math.cos(lat2)
-		double y = Math.cos(lat1) * Math.sin(lat2) - (Math.sin(lat1) * Math.cos(lat2) * Math.cos(diffLong))
+		double x = Math.sin(diffLong)*Math.cos(lat2);
+		double y = Math.cos(lat1) * Math.sin(lat2) - (Math.sin(lat1) * Math.cos(lat2) * Math.cos(diffLong));
 	
-		double initialBearing = Math.toDegrees(Math.atan2(x, y))
+		double initialBearing = Math.toDegrees(Math.atan2(x, y));
 		double error = (initialBearing + 360) % 360;
 		return error - current_bearing;
   }
@@ -128,6 +138,7 @@ public class Controller implements Runnable {
   }
 
   public void control() {
+    System.out.println("controlling");
     // define u1 as first engine and u2 as second engine
     // this will output a value between -1 and 1 for each engine. 
 
@@ -143,7 +154,7 @@ public class Controller implements Runnable {
     GpsResponse location = gps.getLastLocation();
     this.current_latitude = location.getLatitude();
     this.current_longitude = location.getLongitude();
-    this.current_bearing = compass.getLastBearing().bearing;
+    this.current_bearing = compass.getLastBearing().getHeading();
     
     // get current error
     double current_s_error = getDistanceError();
@@ -161,10 +172,10 @@ public class Controller implements Runnable {
 
     // now, calculate the speed differential (turning):
 
-    differential = k_theta*current_theta_error + k_theta_d*d_theta_error;
+    double differential = k_theta*current_theta_error + k_theta_d*d_theta_error;
     // threshold
-    differential = differential > 0.5? 0.5 : differential
-    differential = differential < -0.5? -0.5 : differential
+    differential = differential > 0.5? 0.5 : differential;
+    differential = differential < -0.5? -0.5 : differential;
     // TODO: change the 0.5 to u1, maybe?
 
     u1 = u1 - differential;
@@ -172,7 +183,7 @@ public class Controller implements Runnable {
 
     // send this over serial link
 
-    link.sendData(u1+","+u2);
+    System.out.println(u1+","+u2);
 
     // Finally, set current error as last.
     previous_s_error = current_s_error;

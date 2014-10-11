@@ -7,6 +7,10 @@ public class CompassResponse {
     heading = Double.parseDouble(nmeaResponse.substring(2,lastIndex));
   }
 
+  public double getHeading() {
+    return heading;
+  }
+
   public static boolean isValid(String nmeaResponse) {
     return nmeaResponse.charAt(0) == '$';
   }
