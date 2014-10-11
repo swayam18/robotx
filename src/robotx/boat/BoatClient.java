@@ -50,11 +50,8 @@ public class BoatClient {
     // TODO: Change this guy!
     control.setDestination(0,0);
 
-    control.control();
-    control.control();
-    control.control();
-    //ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-    //exec.scheduleWithFixedDelay(control, 100, 100, TimeUnit.MILLISECONDS);
+    ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+    exec.scheduleWithFixedDelay(control, 100, 100, TimeUnit.MILLISECONDS);
 
   }
   public void initializeHeart() {
