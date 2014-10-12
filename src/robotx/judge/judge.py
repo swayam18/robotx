@@ -173,5 +173,3 @@ if __name__ == "__main__":
 	
 		if command == 'quit':
 			sys.exit()
-	
-

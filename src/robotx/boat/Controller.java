@@ -11,7 +11,7 @@ public class Controller implements Runnable {
 
   GpsClient gps;
   CompassClient compass;
-  SerialLink link;
+  ArduinoLink link;
 
   double destination_latitude;
   double destination_longitude;
@@ -29,7 +29,7 @@ public class Controller implements Runnable {
   private double k_s = 0.1;
   private double k_s_d = 0.0;
 
-  public Controller(GpsClient gps, CompassClient compass, SerialLink link) {
+  public Controller(GpsClient gps, CompassClient compass, ArduinoLink link) {
     this.gps = gps;
     this.compass = compass;
     this.link = link;
@@ -188,7 +188,7 @@ public class Controller implements Runnable {
 
     System.out.println("Distance Error:" + current_s_error);
     System.out.println("Angle Error:" + current_theta_error);
-    System.out.println(u1+","+u2);
+    link.sendData(u1+","+u2);
 
     // Finally, set current error as last.
     previous_s_error = current_s_error;
@@ -196,7 +196,8 @@ public class Controller implements Runnable {
   }
 
   public static void main(String args[]) {
-    Controller controller = new Controller(null, null, null);
+    ArduinoLink link = new ArduinoLink();
+    Controller controller = new Controller(null, null, link);
     controller.control();
   }
 }

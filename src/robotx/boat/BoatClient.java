@@ -16,7 +16,7 @@ public class BoatClient {
   PrintWriter outputStream;
   GpsClient gps;
   CompassClient compass;
-  SerialLink link;
+  ArduinoLink link;
 
   public void initializeCompass() {
     compass = new CompassClient();
@@ -40,13 +40,11 @@ public class BoatClient {
   }
 
   public void initializeSerial() {
-    link = new SerialLink();
-    link.initialize();
+    link = new ArduinoLink();
   }
 
   public void initializeController() {
-    //Controller control = new Controller(gps,compass,link);
-    Controller control = new Controller(null,null,null);
+    Controller control = new Controller(gps,compass,link);
 
     // TODO: Change this guy!
     control.setDestination(0,0);
@@ -80,6 +78,6 @@ public class BoatClient {
   public static void main(String args[])throws Exception {
     BoatClient client = new BoatClient();
     System.out.println("Starting Client");
-    client.initializeController();
+    initialize();
   }
 }
