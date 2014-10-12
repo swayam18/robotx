@@ -15,8 +15,7 @@ public class SerialLink implements SerialPortEventListener {
   SerialPort serialPort;
   /** The port we're normally going to use. */
   private static final String PORT_NAMES[] = { 
-    "/dev/ttyACM0", // Raspberry Pi
-    "/dev/ttyACM1" // Raspberry Pi
+    "/dev/ttyACM0" // Raspberry Pi
   };
   /**
    * A BufferedReader which will be fed by a InputStreamReader 
@@ -34,8 +33,15 @@ public class SerialLink implements SerialPortEventListener {
   private PrintWriter out;
 
   public synchronized void sendData(String data) {
-    out.println(data);
-    out.flush();
+    System.out.println("sending data.......");
+    try {
+      output.write(data.getBytes());
+      output.flush();
+    }
+    catch (Exception IOE) {
+      IOE.printStackTrace();
+
+    }
   }
 
   public void initialize() {
@@ -77,9 +83,11 @@ public class SerialLink implements SerialPortEventListener {
       output = serialPort.getOutputStream();
       out = new PrintWriter(output);
 
+      System.out.println("got everything....");
+
       // add event listeners
-      serialPort.addEventListener(this);
-      serialPort.notifyOnDataAvailable(true);
+      //serialPort.addEventListener(this);
+      //serialPort.notifyOnDataAvailable(true);
     } catch (Exception e) {
       System.err.println(e.toString());
     }
@@ -114,6 +122,8 @@ public class SerialLink implements SerialPortEventListener {
   public static void main(String[] args) throws Exception {
     SerialLink main = new SerialLink();
     main.initialize();
+
+    main.sendData("100,100");
     Thread t=new Thread() {
       public void run() {
         //the following line will keep this app alive for 1000 seconds,
