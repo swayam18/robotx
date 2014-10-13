@@ -10,7 +10,7 @@ public class CompassClient extends Thread {
 
   public void open() throws Exception {
     String server = "localhost";
-    int port = 2947;
+    int port = 3333;
     System.out.println("Opening Connection to GPSD Server for Compass");
     Socket gpsd = new Socket(server, port);
     in = new BufferedReader(new InputStreamReader(gpsd.getInputStream()));
@@ -31,7 +31,7 @@ public class CompassClient extends Thread {
         if(CompassResponse.isValid(nmeaResponse)) {
           CompassResponse response = new CompassResponse(nmeaResponse);
           lastResponse = response;
-          System.out.println(response.heading);
+          //System.out.println(response.heading);
         }
       }
     }

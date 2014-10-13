@@ -32,7 +32,7 @@ public class HeartBeat implements Runnable {
   public void run() {
     GpsResponse location = gps.getLastLocation();
     if(location == null) return;
-    System.out.println("Beating...");
+//    System.out.println("Beating...");
     String NMEA = location.toNMEA() +",";
     NMEA += teamName +",";
     NMEA += mode +",";

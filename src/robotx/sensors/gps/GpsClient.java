@@ -11,7 +11,7 @@ public class GpsClient extends Thread {
 
   public void open() throws Exception {
     String server = "localhost";
-    int port = 2947;
+    int port = 3333;
     System.out.println("Opening Connection to GPSD Server");
     Socket gpsd = new Socket(server, port);
     in = new BufferedReader(new InputStreamReader(gpsd.getInputStream()));
@@ -31,7 +31,7 @@ public class GpsClient extends Thread {
       while ((jsonResponse = in.readLine()) != null) {
         GpsResponse response = gson.fromJson(jsonResponse, GpsResponse.class);
         if(response.isTPV()) {
-          System.out.println(response.TPVString());
+          //System.out.println(response.TPVString());
           lastResponse = response;
         }
       }

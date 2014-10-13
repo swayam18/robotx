@@ -20,6 +20,7 @@ public class ArduinoLink {
   }
 
   public synchronized void sendData(String data) {
+    System.out.println("sending:"+data);
     out.println(data); out.flush();
   }
 }

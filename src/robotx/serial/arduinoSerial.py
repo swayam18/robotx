@@ -6,17 +6,14 @@ import sys
 
 class MyTCPHandler(SocketServer.StreamRequestHandler):
   def handle(self):
-    print 'handling!'
-    print ser
     while True:
       data = self.rfile.readline().strip()
-      print data
       ser.write(data+"\n")
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
-ser = serial.Serial("/dev/ttyACM0")
+ser = serial.Serial("/dev/ttyACM1")
 if __name__ == "__main__":
 
   #connect to arduino

@@ -50,7 +50,7 @@ public class BoatClient {
     control.setDestination(0,0);
 
     ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-    exec.scheduleWithFixedDelay(control, 100, 100, TimeUnit.MILLISECONDS);
+    exec.scheduleWithFixedDelay(control, 1000, 1000, TimeUnit.MILLISECONDS);
 
   }
   public void initializeHeart() {
@@ -78,6 +78,6 @@ public class BoatClient {
   public static void main(String args[])throws Exception {
     BoatClient client = new BoatClient();
     System.out.println("Starting Client");
-    initialize();
+    client.initialize();
   }
 }
