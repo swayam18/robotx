@@ -11,7 +11,7 @@ public class GpsClient extends Thread {
 
   public void open() throws Exception {
     String server = "localhost";
-    int port = 3333;
+    int port = 2947;
     System.out.println("Opening Connection to GPSD Server");
     Socket gpsd = new Socket(server, port);
     in = new BufferedReader(new InputStreamReader(gpsd.getInputStream()));
