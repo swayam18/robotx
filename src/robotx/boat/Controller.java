@@ -2,6 +2,7 @@ package robotx.boat;
 
 import robotx.sensors.gps.*;
 import robotx.sensors.compass.*;
+import java.util.LinkedList;
 /**
  * Given destination latitude and longitude,
  * This will send control signals to the propellers.
@@ -15,6 +16,10 @@ public class Controller implements Runnable {
 
   double destination_latitude;
   double destination_longitude;
+  private double[] s_errors = new double[100];
+  private double[] theta_errors = new double[100];
+  private int s_idx;
+  private int theta_idx;
 
   double current_latitude;
   double current_longitude;
@@ -25,9 +30,13 @@ public class Controller implements Runnable {
 
   // K values used for the controller
   private double k_theta = 0.01;
-  private double k_theta_d = 0.01;
+  private double k_theta_d = 0.005;
+  private double k_theta_i = 0.0001;
+
   private double k_s = 0.1;
   private double k_s_d = 0.01;
+  private double k_s_i = 0.0001;
+
 
   private double dt;
 
@@ -150,6 +159,22 @@ public class Controller implements Runnable {
 
   }
 
+  private double getRunningError(double[] errors) {
+    double s =0;
+    for(int i = 0 ; i < 100; i++) s+= errors[i];
+    return s;
+  }
+
+  private void addPositionError(double e) {
+    s_errors[s_idx] = e;
+    s_idx = (s_idx + 1)%100;
+  }
+
+  private void addThetaError(double e) {
+    theta_errors[theta_idx] = e;
+    theta_idx = (theta_idx + 1) % 100;
+  }
+
   public void control() {
     System.out.println("controlling");
     // define u1 as first engine and u2 as second engine
@@ -182,19 +207,23 @@ public class Controller implements Runnable {
     double d_s_error =  (current_s_error - previous_s_error)/dt;
     double d_theta_error = (current_theta_error - previous_theta_error)/dt;
 
+    double i_s_error = getRunningError(this.s_errors) + current_s_error;
+    double i_theta_error = getRunningError(this.theta_errors) + current_theta_error;
+
     System.out.println("Change in error:" + d_theta_error);
+    System.out.println("i_theta_error:" + i_theta_error);
 
     //
 
     // calculate first the forward speed.
-    u1 = k_s*current_s_error + k_s_d*d_s_error; // maybe divide in dt (which seems to be 0.1)
+    u1 = k_s*current_s_error + k_s_d*d_s_error + k_s_i * i_s_error; // maybe divide in dt (which seems to be 0.1)
     // threshold the forward value
     u1 = u1 > 0.5 ? 0.5 : u1;
     u2 = u1; // equivalent.
 
     // now, calculate the speed differential (turning):
 
-    double differential = k_theta*current_theta_error + k_theta_d*d_theta_error;
+    double differential = k_theta*current_theta_error + k_theta_d*d_theta_error + k_theta_i * i_theta_error ;
     // threshold
     differential = differential > 0.5? 0.5 : differential;
     differential = differential < -0.5? -0.5 : differential;
@@ -220,6 +249,9 @@ public class Controller implements Runnable {
     // Finally, set current error as last.
     previous_s_error = current_s_error;
     previous_theta_error = current_theta_error;
+    //and add in the errors
+    addThetaError(current_theta_error);
+    addPositionError(current_s_error);
   }
 
   public static void main(String args[]) {
