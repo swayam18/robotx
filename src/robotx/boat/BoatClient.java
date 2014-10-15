@@ -45,12 +45,14 @@ public class BoatClient {
 
   public void initializeController() {
     Controller control = new Controller(gps,compass,link);
+    long time = 100; //ms
 
     // TODO: Change this guy!
     control.setDestination(0,0);
+    control.setDt(time/1000.0);
 
     ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-    exec.scheduleWithFixedDelay(control, 1000, 1000, TimeUnit.MILLISECONDS);
+    exec.scheduleWithFixedDelay(control, time, time, TimeUnit.MILLISECONDS);
 
   }
   public void initializeHeart() {

@@ -24,10 +24,12 @@ public class Controller implements Runnable {
   private double previous_theta_error;
 
   // K values used for the controller
-  private double k_theta = 0.1;
-  private double k_theta_d = 0.0;
+  private double k_theta = 0.01;
+  private double k_theta_d = 0.01;
   private double k_s = 0.1;
-  private double k_s_d = 0.0;
+  private double k_s_d = 0.01;
+
+  private double dt;
 
   public Controller(GpsClient gps, CompassClient compass, ArduinoLink link) {
     this.gps = gps;
@@ -35,6 +37,9 @@ public class Controller implements Runnable {
     this.link = link;
   }
 
+  public void setDt(double dt) {
+    this.dt = dt;
+  }
   public void setDestination(double longitude, double latitude) {
     destination_latitude = latitude;
     destination_longitude = longitude;
@@ -63,7 +68,15 @@ public class Controller implements Runnable {
 	
 		double initialBearing = Math.toDegrees(Math.atan2(x, y));
 		double error = (initialBearing + 360) % 360;
-		return error - current_bearing;
+    //System.out.println("normalized bearing:"+ error);
+    //System.out.println("current heading"+ current_bearing);
+
+    double actual_error = error - current_bearing;
+    if(actual_error > 180) { 
+      actual_error = actual_error - 360;
+    }
+
+		return actual_error;
   }
 
   public double getDistanceError() {
@@ -166,8 +179,12 @@ public class Controller implements Runnable {
     double current_theta_error = getBearingError();
 
     // calculate instantaneous change in error
-    double d_s_error =  current_s_error - previous_s_error;
-    double d_theta_error = current_theta_error - previous_theta_error;
+    double d_s_error =  (current_s_error - previous_s_error)/dt;
+    double d_theta_error = (current_theta_error - previous_theta_error)/dt;
+
+    System.out.println("Change in error:" + d_theta_error);
+
+    //
 
     // calculate first the forward speed.
     u1 = k_s*current_s_error + k_s_d*d_s_error; // maybe divide in dt (which seems to be 0.1)
@@ -192,8 +209,12 @@ public class Controller implements Runnable {
     //System.out.println("Angle Error:" + current_theta_error);
     int _u1 = (int) (90 + 90*u1);
     int _u2 = (int) (90 + 90*u2);
-    System.out.println(_u1);
-    System.out.println(_u2);
+    //System.out.println(_u1);
+    //System.out.println(_u2);
+    //System.out.println("current angle:"+ current_bearing);
+    //System.out.println("desired angle:"+ (current_bearing + current_theta_error));
+    //System.out.println("error:"+ current_theta_error);
+
     link.sendData(_u1+","+_u2);
 
     // Finally, set current error as last.
