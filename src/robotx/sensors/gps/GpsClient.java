@@ -26,18 +26,33 @@ public class GpsClient extends Thread {
     Gson gson = new Gson();
     out.println("?WATCH={\"enable\":true,\"json\":true, \"device\": \"/dev/ttyACM0\"}");
     System.out.println("Watch Request for GPS Sent");
+
+    // initialize File Object for logging
+    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss");
+    Date date = new Date();
+
+    String logFileName = "log/" + dateFormat.format(date) + ".gpx";
+    FileWriter log = new FileWriter(logFileName);
+
     try {
       String jsonResponse;
       while ((jsonResponse = in.readLine()) != null) {
         GpsResponse response = gson.fromJson(jsonResponse, GpsResponse.class);
         if(response.isTPV()) {
+
           //System.out.println(response.TPVString());
           lastResponse = response;
+
+          //write to logger here
+          String logStatement = lastResponse.utcTime() + ": " + ",," + lastResponse.latlong() +",";
+          log.write(logStatement);
         }
       }
     }
     catch (IOException e) {
     }
+
+    log.close();
   }
 
   public GpsResponse getLastLocation() {
