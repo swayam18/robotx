@@ -45,7 +45,7 @@ public class BoatClient {
 
   public void initializeController() {
     Controller control = new Controller(gps,compass,link);
-    long time = 100; //ms
+    long time = 1000; //ms
 
     // TODO: Change this guy!
     control.setDestination(0,0);

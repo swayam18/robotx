@@ -210,41 +210,41 @@ public class Controller implements Runnable {
     double i_s_error = getRunningError(this.s_errors) + current_s_error;
     double i_theta_error = getRunningError(this.theta_errors) + current_theta_error;
 
-    System.out.println("Change in error:" + d_theta_error);
-    System.out.println("i_theta_error:" + i_theta_error);
+    //System.out.println("Change in error:" + d_theta_error);
+    //System.out.println("i_theta_error:" + i_theta_error);
 
     //
 
     // calculate first the forward speed.
     u1 = k_s*current_s_error + k_s_d*d_s_error + k_s_i * i_s_error; // maybe divide in dt (which seems to be 0.1)
     // threshold the forward value
-    u1 = u1 > 0.5 ? 0.5 : u1;
+    u1 = u1 > 0.3 ? 0.3 : u1;
     u2 = u1; // equivalent.
 
     // now, calculate the speed differential (turning):
 
     double differential = k_theta*current_theta_error + k_theta_d*d_theta_error + k_theta_i * i_theta_error ;
     // threshold
-    differential = differential > 0.5? 0.5 : differential;
-    differential = differential < -0.5? -0.5 : differential;
-    // TODO: change the 0.5 to u1, maybe?
+    differential = differential > 0.3? 0.3 : differential;
+    differential = differential < -0.3? -0.3 : differential;
+    // TODO: change the 0.3 to u1, maybe?
 
     u1 = u1 - differential;
     u2 = u2 + differential;
 
     // send this over serial link
 
-    //System.out.println("Distance Error:" + current_s_error);
-    //System.out.println("Angle Error:" + current_theta_error);
+    System.out.println("Distance Error:" + current_s_error);
+    System.out.println("Angle Error:" + current_theta_error);
     int _u1 = (int) (90 + 90*u1);
     int _u2 = (int) (90 + 90*u2);
     //System.out.println(_u1);
     //System.out.println(_u2);
-    //System.out.println("current angle:"+ current_bearing);
-    //System.out.println("desired angle:"+ (current_bearing + current_theta_error));
-    //System.out.println("error:"+ current_theta_error);
+    System.out.println("current angle:"+ current_bearing);
+    System.out.println("desired angle:"+ (current_bearing + current_theta_error));
+    System.out.println("error:"+ current_theta_error);
 
-    link.sendData(_u1+","+_u2);
+    link.sendData("$"+_u1+","+_u2);
 
     // Finally, set current error as last.
     previous_s_error = current_s_error;

@@ -36,8 +36,5 @@ if __name__ == "__main__":
 	print "Connect to Arduino server on port:", PORT
 	
 	while True:
-		command = raw_input("type 'quit' to exit program   ")
-		print ""
-	
-		if command == 'quit':
-			sys.exit()
+			inp = ser.readline()
+			print inp
