@@ -29,13 +29,17 @@ public class Controller implements Runnable {
   private double previous_theta_error;
 
   // K values used for the controller
-  private double k_theta = 0.01;
-  private double k_theta_d = 0.005;
-  private double k_theta_i = 0.0001;
+  private double k_theta = 0.005;
+  //private double k_theta_d = 0.005;
+  private double k_theta_d = 0.0;
+  private double k_theta_i = 0.0;
+  //private double k_theta_i = 0.0001;
 
-  private double k_s = 0.1;
-  private double k_s_d = 0.01;
-  private double k_s_i = 0.0001;
+  private double k_s = 0.08;
+  //private double k_s_d = 0.005;
+  private double k_s_d = 0.0;
+  private double k_s_i = 0.01;
+  //private double k_s_i = 0.0001;
 
 
   private double dt;
@@ -49,7 +53,7 @@ public class Controller implements Runnable {
   public void setDt(double dt) {
     this.dt = dt;
   }
-  public void setDestination(double longitude, double latitude) {
+  public void setDestination(double latitude, double longitude) {
     destination_latitude = latitude;
     destination_longitude = longitude;
   }
@@ -83,6 +87,10 @@ public class Controller implements Runnable {
     double actual_error = error - current_bearing;
     if(actual_error > 180) { 
       actual_error = actual_error - 360;
+    }
+
+    else if(actual_error < -180) { 
+      actual_error = actual_error + 360;
     }
 
 		return actual_error;
@@ -176,7 +184,6 @@ public class Controller implements Runnable {
   }
 
   public void control() {
-    System.out.println("controlling");
     // define u1 as first engine and u2 as second engine
     // this will output a value between -1 and 1 for each engine. 
 
@@ -189,16 +196,20 @@ public class Controller implements Runnable {
 
     //first, get current location and bearing
 
+    CompassResponse heading = compass.getLastBearing();
+    if(heading == null) { System.out.println("Heading null!");return; } // do nothing...
+    this.current_bearing = heading.getHeading();
+    System.out.println("Bearing: "+ this.current_bearing);
+
     GpsResponse location = gps.getLastLocation();
-    if(location == null) { return; } // do nothing...
+    if(location == null) { System.out.println("location null!"); return; } // do nothing...
 
     this.current_latitude = location.getLatitude();
     this.current_longitude = location.getLongitude();
-    CompassResponse heading = compass.getLastBearing();
-    if(heading == null) { return; } // do nothing...
+    //this.current_longitude = 103.85683;
+    //this.current_latitude = 1.28733;
 
-    this.current_bearing = heading.getHeading();
-    
+    System.out.println("Location: "+ this.current_longitude +","+ this.current_latitude);
     // get current error
     double current_s_error = getDistanceError();
     double current_theta_error = getBearingError();
@@ -210,8 +221,8 @@ public class Controller implements Runnable {
     double i_s_error = getRunningError(this.s_errors) + current_s_error;
     double i_theta_error = getRunningError(this.theta_errors) + current_theta_error;
 
-    System.out.println("Change in error:" + d_theta_error);
-    System.out.println("i_theta_error:" + i_theta_error);
+    //System.out.println("Change in error:" + d_theta_error);
+    //System.out.println("i_theta_error:" + i_theta_error);
 
     //
 
@@ -220,13 +231,14 @@ public class Controller implements Runnable {
     // threshold the forward value
     u1 = u1 > 0.5 ? 0.5 : u1;
     u2 = u1; // equivalent.
+    System.out.println("Forward Motor:" + u1);
 
     // now, calculate the speed differential (turning):
 
     double differential = k_theta*current_theta_error + k_theta_d*d_theta_error + k_theta_i * i_theta_error ;
     // threshold
-    differential = differential > 0.5? 0.5 : differential;
-    differential = differential < -0.5? -0.5 : differential;
+    differential = differential > 0.3? 0.3 : differential;
+    differential = differential < -0.3? -0.3 : differential;
     // TODO: change the 0.5 to u1, maybe?
 
     u1 = u1 - differential;
@@ -242,9 +254,16 @@ public class Controller implements Runnable {
     //System.out.println(_u2);
     //System.out.println("current angle:"+ current_bearing);
     //System.out.println("desired angle:"+ (current_bearing + current_theta_error));
-    //System.out.println("error:"+ current_theta_error);
+    System.out.println("angle error:"+ current_theta_error);
+    System.out.println("distance error:"+ current_s_error);
 
-    link.sendData(_u1+","+_u2);
+    if(current_s_error < 2) {
+    	System.out.println("Approaching Destination!");
+	_u1 = 90;
+        _u2 = 90;
+    }
+    link.sendData("$"+_u2+","+_u1);
+    //link.sendData("120,120");
 
     // Finally, set current error as last.
     previous_s_error = current_s_error;

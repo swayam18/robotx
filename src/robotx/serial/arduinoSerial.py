@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
   #connect to arduino
 	#create server
-	HOST, PORT = "localhost", 6665
+	HOST, PORT = "localhost", 6666
 	# Create the server, binding to localhost on port 12345
 	#server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
 	server = ThreadedTCPServer((HOST, PORT), MyTCPHandler)
@@ -36,8 +36,5 @@ if __name__ == "__main__":
 	print "Connect to Arduino server on port:", PORT
 	
 	while True:
-		command = raw_input("type 'quit' to exit program   ")
-		print ""
-	
-		if command == 'quit':
-			sys.exit()
+		inp = ser.readline();
+		print inp

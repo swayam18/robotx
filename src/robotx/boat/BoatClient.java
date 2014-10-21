@@ -45,10 +45,12 @@ public class BoatClient {
 
   public void initializeController() {
     Controller control = new Controller(gps,compass,link);
-    long time = 100; //ms
+    long time = 1000; //ms
 
     // TODO: Change this guy!
-    control.setDestination(0,0);
+    control.setDestination(1.288093, 103.859826);
+    //control.setDestination(1.28776, 103.85683);
+
     control.setDt(time/1000.0);
 
     ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
@@ -65,7 +67,7 @@ public class BoatClient {
   public void initialize() throws Exception {
     String server= "localhost";
     int port = 12345;
-    System.out.println("Opening Socket");
+    System.out.println("Opening Socket at server:"+server);
     Socket judgeSocket= new Socket(server, port);
     System.out.println("Socket Opened ");
 

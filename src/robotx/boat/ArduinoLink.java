@@ -8,7 +8,7 @@ public class ArduinoLink {
 
   public ArduinoLink() {
     String server = "localhost";
-    int port = 6665;
+    int port = 6666;
 
     try {
       Socket arduinoSocket = new Socket(server, port);
@@ -22,5 +22,6 @@ public class ArduinoLink {
   public synchronized void sendData(String data) {
     System.out.println("sending:"+data);
     out.println(data); out.flush();
+    System.out.println("sent!"+data);
   }
 }
