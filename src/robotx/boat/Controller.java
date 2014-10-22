@@ -31,7 +31,7 @@ public class Controller implements Runnable {
   private LinkedList<Location> waypoints;
 
   // K values used for the controller
-  private double k_theta = 0.005;
+  private double k_theta = 0.004;
   //private double k_theta_d = 0.005;
   private double k_theta_d = 0.0;
   private double k_theta_i = 0.0;
@@ -242,7 +242,7 @@ public class Controller implements Runnable {
     // calculate first the forward speed.
     u1 = k_s*current_s_error + k_s_d*d_s_error + k_s_i * i_s_error; // maybe divide in dt (which seems to be 0.1)
     // threshold the forward value
-    u1 = u1 > 0.5 ? 0.5 : u1;
+    u1 = u1 > 0.3 ? 0.3 : u1;
     u2 = u1; // equivalent.
     System.out.println("Forward Motor:" + u1);
 
@@ -270,6 +270,7 @@ public class Controller implements Runnable {
       _u2 = 90;
       setDestinationFromWaypoints();
     }
+    _u2 = _u1+10;
     link.sendData("$"+_u2+","+_u1);
     //link.sendData("120,120");
 
