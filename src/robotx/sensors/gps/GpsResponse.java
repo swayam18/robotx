@@ -51,7 +51,7 @@ public class GpsResponse {
   }
 
   // Format [Lat],[N/S],[LON],[E/W]
-  private String latlong() {
+  String latlong() {
     String latlong = "";
     double latitude = Double.parseDouble(lat);
     double longitude = Double.parseDouble(lon);

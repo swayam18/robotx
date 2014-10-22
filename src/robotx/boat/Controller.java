@@ -28,6 +28,8 @@ public class Controller implements Runnable {
   private double previous_s_error;
   private double previous_theta_error;
 
+  private LinkedList<Location> waypoints;
+
   // K values used for the controller
   private double k_theta = 0.005;
   //private double k_theta_d = 0.005;
@@ -53,6 +55,17 @@ public class Controller implements Runnable {
   public void setDt(double dt) {
     this.dt = dt;
   }
+
+  public void addWaypoint(double latitude, double longitude) {
+    Location waypoint = new Location(latitude, longitude);
+    waypoints.add(waypoint);
+  }
+
+  public void setDestinationFromWaypoints() {
+    Location newDestination = waypoints.remove();   
+    if (newDestination!= null) setDestination(newDestination.latitude, newDestination.longitude);
+  }
+
   public void setDestination(double latitude, double longitude) {
     destination_latitude = latitude;
     destination_longitude = longitude;
@@ -246,21 +259,16 @@ public class Controller implements Runnable {
 
     // send this over serial link
 
-    //System.out.println("Distance Error:" + current_s_error);
-    //System.out.println("Angle Error:" + current_theta_error);
     int _u1 = (int) (normalize(u1));
     int _u2 = (int) (normalize(u1));
-    //System.out.println(_u1);
-    //System.out.println(_u2);
-    //System.out.println("current angle:"+ current_bearing);
-    //System.out.println("desired angle:"+ (current_bearing + current_theta_error));
     System.out.println("angle error:"+ current_theta_error);
     System.out.println("distance error:"+ current_s_error);
 
-    if(current_s_error < 2) {
+    if(current_s_error < 1.5) {
     	System.out.println("Approaching Destination!");
       _u1 = 90;
       _u2 = 90;
+      setDestinationFromWaypoints();
     }
     link.sendData("$"+_u2+","+_u1);
     //link.sendData("120,120");
@@ -273,7 +281,7 @@ public class Controller implements Runnable {
     addPositionError(current_s_error);
   }
 
-  public int normalize(int motor) {
+  public double normalize(double motor) {
     if(motor < 0) {
       motor = motor*80 + 80;
     }
@@ -290,5 +298,15 @@ public class Controller implements Runnable {
     ArduinoLink link = new ArduinoLink();
     Controller controller = new Controller(null, null, link);
     controller.control();
+  }
+}
+
+class Location {
+  double latitude;
+  double longitude ;
+
+  Location(double latitude, double longitude) {
+    this.latitude = latitude;
+    this.longitude = longitude;
   }
 }

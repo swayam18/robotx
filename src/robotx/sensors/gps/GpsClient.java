@@ -3,6 +3,9 @@ package robotx.sensors.gps;
 import java.io.*;
 import java.net.*;
 import com.google.gson.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class GpsClient extends Thread {
   private BufferedReader in;
@@ -32,9 +35,9 @@ public class GpsClient extends Thread {
     Date date = new Date();
 
     String logFileName = "log/" + dateFormat.format(date) + ".gpx";
-    FileWriter log = new FileWriter(logFileName);
 
     try {
+      FileWriter log = new FileWriter(logFileName);
       String jsonResponse;
       while ((jsonResponse = in.readLine()) != null) {
         GpsResponse response = gson.fromJson(jsonResponse, GpsResponse.class);
@@ -47,12 +50,14 @@ public class GpsClient extends Thread {
           String logStatement = lastResponse.utcTime() + ": " + ",," + lastResponse.latlong() +",";
           log.write(logStatement);
         }
+      log.close();
       }
     }
     catch (IOException e) {
+      System.out.println("IOEXCEPTION!");
+      e.printStackTrace();
     }
 
-    log.close();
   }
 
   public GpsResponse getLastLocation() {

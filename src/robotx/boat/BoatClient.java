@@ -48,8 +48,10 @@ public class BoatClient {
     long time = 1000; //ms
 
     // TODO: Change this guy!
-    control.setDestination(1.288093, 103.859826);
+    //control.setDestination(1.288093, 103.859826);
     //control.setDestination(1.28776, 103.85683);
+    control.addWaypoint(1.288093, 103.859826);
+    control.setDestinationFromWaypoints();
 
     control.setDt(time/1000.0);
 
