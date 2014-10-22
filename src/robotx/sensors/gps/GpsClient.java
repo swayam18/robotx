@@ -37,7 +37,7 @@ public class GpsClient extends Thread {
     String logFileName = "log/" + dateFormat.format(date) + ".gpx";
 
     try {
-      FileWriter log = new FileWriter(logFileName);
+      //FileWriter log = new FileWriter(logFileName);
       String jsonResponse;
       while ((jsonResponse = in.readLine()) != null) {
         GpsResponse response = gson.fromJson(jsonResponse, GpsResponse.class);
@@ -47,10 +47,10 @@ public class GpsClient extends Thread {
           lastResponse = response;
 
           //write to logger here
-          String logStatement = lastResponse.utcTime() + ": " + ",," + lastResponse.latlong() +",";
-          log.write(logStatement);
+          //String logStatement = lastResponse.utcTime() + ": " + ",," + lastResponse.latlong() +",";
+          //log.write(logStatement);
         }
-      log.close();
+      //log.close();
       }
     }
     catch (IOException e) {

@@ -28,7 +28,7 @@ public class Controller implements Runnable {
   private double previous_s_error;
   private double previous_theta_error;
 
-  private LinkedList<Location> waypoints;
+  private LinkedList<Location> waypoints = new LinkedList<Location>();
 
   // K values used for the controller
   private double k_theta = 0.004;
@@ -62,8 +62,12 @@ public class Controller implements Runnable {
   }
 
   public void setDestinationFromWaypoints() {
-    Location newDestination = waypoints.remove();   
-    if (newDestination!= null) setDestination(newDestination.latitude, newDestination.longitude);
+    System.out.println("Setting new destination!");
+    Location newDestination = waypoints.poll();   
+    if (newDestination!= null) {
+      setDestination(newDestination.latitude, newDestination.longitude);
+      System.out.println("New Destination:" + destination_latitude+","+ destination_longitude);
+    }
   }
 
   public void setDestination(double latitude, double longitude) {
@@ -260,7 +264,7 @@ public class Controller implements Runnable {
     // send this over serial link
 
     int _u1 = (int) (normalize(u1));
-    int _u2 = (int) (normalize(u1));
+    int _u2 = (int) (normalize(u2));
     System.out.println("angle error:"+ current_theta_error);
     System.out.println("distance error:"+ current_s_error);
 
@@ -270,7 +274,7 @@ public class Controller implements Runnable {
       _u2 = 90;
       setDestinationFromWaypoints();
     }
-    _u2 = _u1+10;
+    _u2 = _u2+10;
     link.sendData("$"+_u2+","+_u1);
     //link.sendData("120,120");
 
@@ -283,16 +287,20 @@ public class Controller implements Runnable {
   }
 
   public double normalize(double motor) {
+    double normal = 0;
     if(motor < 0) {
-      motor = motor*80 + 80;
+      normal = motor*80 + 80;
     }
     else if (motor > 0 ) {
-      motor = motor*80 + 100;
+      normal = motor*80 + 100;
     }
     else {
-      motor = 90;
+      normal = 90;
     }
-    return motor;
+    System.out.println(motor);
+    System.out.println(normal);
+
+    return normal;
   }
 
   public static void main(String args[]) {
