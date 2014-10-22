@@ -5,8 +5,12 @@ import threading
 import sys
 
 class MyTCPHandler(SocketServer.StreamRequestHandler):
+  def __init__(self,mode):
+    self.mode = mode
+    
   def handle(self):
     while True:
+      self.wfile.write(mode+"\n")
       data = self.rfile.readline().strip()
       ser.write(data+"\n")
 
@@ -18,24 +22,28 @@ if __name__ == "__main__":
 
   #connect to arduino
 	#create server
-	HOST, PORT = "localhost", 6666
+  HOST, PORT = "localhost", 6666
 	# Create the server, binding to localhost on port 12345
 	#server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
-	server = ThreadedTCPServer((HOST, PORT), MyTCPHandler)
+  server = ThreadedTCPServer((HOST, PORT), MyTCPHandler)
 	
 	# Start a thread with the server -- that thread will then start one
     # more thread for each request
-	server_thread = threading.Thread(target=server.serve_forever)
+  server_thread = threading.Thread(target=server.serve_forever)
 	
 	# Exit the server thread when the main thread terminates
-	server_thread.daemon = True
-	server_thread.start()
-	print "Server Arduino Link Running"
-	print "Server Address:", socket.gethostbyname(socket.gethostname()) 
+  server_thread.daemon = True
+  server_thread.start()
+  print "Server Arduino Link Running"
+  print "Server Address:", socket.gethostbyname(socket.gethostname()) 
 	
-	print "Connect to Arduino server on port:", PORT
+  print "Connect to Arduino server on port:", PORT
+  mode = "RC"
 	
-	while True:
-		pass
-		inp = ser.readline();
-		print inp
+  while True:
+    inp = ser.readline();
+    print inp
+    if inp == 'AUTO':
+      mode = 'AUTO'
+    elif inp == 'RC':
+      mode = 'RC'
