@@ -47,7 +47,6 @@ public class HeartBeat implements Runnable {
     NMEA += "*"+checksum(NMEA);
 
     out.println(NMEA);
-    System.out.println(NMEA);
     out.flush();
   }
 }
