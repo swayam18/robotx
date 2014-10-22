@@ -17,6 +17,7 @@ public class BoatClient {
   GpsClient gps;
   CompassClient compass;
   ArduinoLink link;
+  HeartBeat heartbeat;
 
   public void initializeCompass() {
     compass = new CompassClient();
@@ -40,7 +41,7 @@ public class BoatClient {
   }
 
   public void initializeSerial() {
-    link = new ArduinoLink();
+    link = new ArduinoLink(heartbeat);
   }
 
   public void initializeController() {
@@ -61,14 +62,14 @@ public class BoatClient {
   }
   public void initializeHeart() {
     System.out.println("Starting Heart...");
-    HeartBeat heartbeat = new HeartBeat(gps, outputStream);
+    heartbeat = new HeartBeat(gps, outputStream);
     ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     exec.scheduleWithFixedDelay(heartbeat, 1, 1, TimeUnit.SECONDS);
   }
 
   public void initialize() throws Exception {
-    //String server= "10.0.2.1";
-    String server= "localhost";
+    String server= "10.0.2.1";
+    //String server= "localhost";
     int port = 12345;
     System.out.println("Opening Socket at server:"+server);
     Socket judgeSocket= new Socket(server, port);

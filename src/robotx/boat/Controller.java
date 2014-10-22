@@ -304,9 +304,6 @@ public class Controller implements Runnable {
   }
 
   public static void main(String args[]) {
-    ArduinoLink link = new ArduinoLink();
-    Controller controller = new Controller(null, null, link);
-    controller.control();
   }
 }
 

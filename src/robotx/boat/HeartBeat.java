@@ -10,7 +10,7 @@ import robotx.sensors.gps.*;
 public class HeartBeat implements Runnable {
   private GpsClient gps;
   private PrintWriter out;
-  private String teamName="AUVSI";
+  private String teamName="SEALS";
   private int mode = 2;
   private int task = 3;
 
@@ -25,7 +25,14 @@ public class HeartBeat implements Runnable {
   public String checksum(String s) {
     int sum = 0;
     for(int i = 1; i < s.length(); i++) { sum^= (int) s.charAt(i); }
-    return Integer.toHexString(sum);
+    String ck= (Integer.toHexString(sum)).toUpperCase();
+
+    if(ck.length() == 1) ck = "0"+ck;
+    return ck;
+  }
+
+  public void setMode(int mode) {
+    this.mode = mode;
   }
 
   @Override
@@ -40,6 +47,7 @@ public class HeartBeat implements Runnable {
     NMEA += "*"+checksum(NMEA);
 
     out.println(NMEA);
+    System.out.println(NMEA);
     out.flush();
   }
 }
