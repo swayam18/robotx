@@ -268,7 +268,7 @@ public class Controller implements Runnable {
     System.out.println("angle error:"+ current_theta_error);
     System.out.println("distance error:"+ current_s_error);
 
-    if(current_s_error < 1.5) {
+    if(current_s_error < 3.0) {
     	System.out.println("Approaching Destination!");
       _u1 = 90;
       _u2 = 90;

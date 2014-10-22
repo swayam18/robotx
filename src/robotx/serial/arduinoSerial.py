@@ -8,12 +8,12 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
   def handle(self):
     while True:
       data = self.rfile.readline().strip()
-      #ser.write(data+"\n")
+      ser.write(data+"\n")
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
-#ser = serial.Serial("/dev/ttyACM1")
+ser = serial.Serial("/dev/ttyACM1")
 if __name__ == "__main__":
 
   #connect to arduino
@@ -37,5 +37,5 @@ if __name__ == "__main__":
 	
 	while True:
 		pass
-		#inp = ser.readline();
-		#print inp
+		inp = ser.readline();
+		print inp
