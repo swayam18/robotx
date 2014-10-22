@@ -3,9 +3,11 @@ package robotx.sensors.gps;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.Date;
+import com.google.gson.annotations.SerializedName;
 
 public class GpsResponse {
-  int mode;
+  @SerializedName("class") String type;
+  String mode;
   String time;
   String lat;
   String lon;
@@ -22,7 +24,7 @@ public class GpsResponse {
   private DateFormat UTCFormat = new SimpleDateFormat("HHmmss");
 
   public boolean isTPV() {
-    return time != null && lat!= null && lon != null;
+    return type.equals("TPV") && time != null && lat!= null && lon != null;
   }
   public String TPVString() {
     return "Time:"+time+" Latitude: " + lat + "Longitude: "+lon;

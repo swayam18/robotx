@@ -248,8 +248,8 @@ public class Controller implements Runnable {
 
     //System.out.println("Distance Error:" + current_s_error);
     //System.out.println("Angle Error:" + current_theta_error);
-    int _u1 = (int) (90 + 90*u1);
-    int _u2 = (int) (90 + 90*u2);
+    int _u1 = (int) (normalize(u1));
+    int _u2 = (int) (normalize(u1));
     //System.out.println(_u1);
     //System.out.println(_u2);
     //System.out.println("current angle:"+ current_bearing);
@@ -259,8 +259,8 @@ public class Controller implements Runnable {
 
     if(current_s_error < 2) {
     	System.out.println("Approaching Destination!");
-	_u1 = 90;
-        _u2 = 90;
+      _u1 = 90;
+      _u2 = 90;
     }
     link.sendData("$"+_u2+","+_u1);
     //link.sendData("120,120");
@@ -271,6 +271,19 @@ public class Controller implements Runnable {
     //and add in the errors
     addThetaError(current_theta_error);
     addPositionError(current_s_error);
+  }
+
+  public int normalize(int motor) {
+    if(motor < 0) {
+      motor = motor*80 + 80;
+    }
+    else if (motor > 0 ) {
+      motor = motor*80 + 100;
+    }
+    else {
+      motor = 90;
+    }
+    return motor;
   }
 
   public static void main(String args[]) {
