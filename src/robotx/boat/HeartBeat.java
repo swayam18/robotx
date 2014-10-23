@@ -12,7 +12,7 @@ public class HeartBeat implements Runnable {
   private PrintWriter out;
   private String teamName="SEALS";
   private int mode = 2;
-  private int task = 3;
+  private int task = 1;
 
 
   public HeartBeat(GpsClient gps, PrintWriter out) {

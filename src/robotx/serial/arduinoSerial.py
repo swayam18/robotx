@@ -14,7 +14,7 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
-ser = serial.Serial("/dev/ttyACM1")
+#ser = serial.Serial("/dev/ttyACM1")
 mode = "RC"
 
 if __name__ == "__main__":
@@ -39,9 +39,10 @@ if __name__ == "__main__":
   print "Connect to Arduino server on port:", PORT
 	
   while True:
+    continue
     inp = ser.readline();
     print inp
-    if inp == 'AUTO':
+    if inp[:4] == 'AUTO':
       mode = 'AUTO'
-    elif inp == 'RC':
+    elif inp[:2] == 'RC':
       mode = 'RC'

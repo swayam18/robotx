@@ -30,6 +30,7 @@ public class ArduinoLink extends Thread{
     String data = "";
     try {
     while( (data= in.readLine()) != null) {
+      if (heart == null) { continue; }
       if (data.equals("AUTO")) { heart.setMode(2); }
       else if (data.equals("RC")) { heart.setMode(1); }
     }
