@@ -5,9 +5,6 @@ import threading
 import sys
 
 class MyTCPHandler(SocketServer.StreamRequestHandler):
-  def __init__(self,mode):
-    self.mode = mode
-    
   def handle(self):
     while True:
       self.wfile.write(mode+"\n")
@@ -18,6 +15,8 @@ class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
 ser = serial.Serial("/dev/ttyACM1")
+mode = "RC"
+
 if __name__ == "__main__":
 
   #connect to arduino
@@ -38,7 +37,6 @@ if __name__ == "__main__":
   print "Server Address:", socket.gethostbyname(socket.gethostname()) 
 	
   print "Connect to Arduino server on port:", PORT
-  mode = "RC"
 	
   while True:
     inp = ser.readline();
