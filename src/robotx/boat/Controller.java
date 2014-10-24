@@ -274,7 +274,7 @@ public class Controller implements Runnable {
       _u2 = 90;
       setDestinationFromWaypoints();
     }
-    _u2 = _u2+10;
+    _u2 = _u2;
     link.sendData("$"+_u2+","+_u1);
     //link.sendData("120,120");
 

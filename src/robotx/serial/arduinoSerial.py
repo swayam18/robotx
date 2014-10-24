@@ -14,7 +14,7 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
-#ser = serial.Serial("/dev/ttyACM1")
+ser = serial.Serial("/dev/ttyACM1")
 mode = "RC"
 
 if __name__ == "__main__":
@@ -46,3 +46,4 @@ if __name__ == "__main__":
       mode = 'AUTO'
     elif inp[:2] == 'RC':
       mode = 'RC'
+#	mode ='AUTO'

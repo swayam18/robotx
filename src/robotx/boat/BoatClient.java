@@ -75,8 +75,8 @@ public class BoatClient {
   }
 
   public void initialize() throws Exception {
-    //String server= "10.0.2.1";
-    String server= "localhost";
+    String server= "10.0.2.1";
+    //String server= "localhost";
     int port = 12345;
     System.out.println("Opening Socket at server:"+server);
     Socket judgeSocket= new Socket(server, port);
