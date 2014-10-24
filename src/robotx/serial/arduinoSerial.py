@@ -39,7 +39,7 @@ if __name__ == "__main__":
   print "Connect to Arduino server on port:", PORT
 	
   while True:
-    continue
+    # continue
     inp = ser.readline();
     print inp
     if inp[:4] == 'AUTO':

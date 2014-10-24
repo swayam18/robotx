@@ -213,6 +213,8 @@ public class Controller implements Runnable {
 
     //first, get current location and bearing
 
+		System.out.println(link.getMode()); // print AUTO MODE or RC MODE
+
     CompassResponse heading = compass.getLastBearing();
     if(heading == null) { System.out.println("Heading null!");return; } // do nothing...
     this.current_bearing = heading.getHeading();

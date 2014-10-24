@@ -31,6 +31,10 @@ public class HeartBeat implements Runnable {
     return ck;
   }
 
+	public int getMode() {
+		return this.mode;
+	}
+
   public void setMode(int mode) {
     this.mode = mode;
   }

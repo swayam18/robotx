@@ -44,4 +44,12 @@ public class ArduinoLink extends Thread{
     out.println(data); out.flush();
     System.out.println("sent!"+data);
   }
+
+  public String getMode(){
+		int heartMode = heart.getMode();
+		if (heartMode==1)
+			return "------------RC MODE--------------";
+		else
+			return "------------AUTO MODE------------";
+  }
 }
